@@ -25,7 +25,7 @@ export default async function handler(
 
     const movies = await prismadb.movie.findUnique({
       where: {
-        id: movieId as unknown as number,
+        id: parseInt(movieId),
       },
     });
 

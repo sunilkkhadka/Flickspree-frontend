@@ -2,6 +2,9 @@ import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";
 
+import prismadb from "@/libs/prismadb";
+import { getUploadUrl } from "@/libs/helper";
+
 export async function POST(request: NextRequest) {
   const data = await request.formData();
   const imageFile: File | null = data.get("imageFile") as unknown as File;
@@ -22,6 +25,18 @@ export async function POST(request: NextRequest) {
 
   const videoPath = join("public", "files", videoFile.name);
   await writeFile(videoPath, videoBuffer);
+
+  const movie = await prismadb.movie.create({
+    data: {
+      title: data.get("title") as string,
+      description: data.get("title") as string,
+      videoUrl: getUploadUrl(videoPath),
+      thumbnailUrl: getUploadUrl(imagePath),
+      genre: "Comedy",
+      rating: 5,
+      duration: "15 mins",
+    },
+  });
 
   return NextResponse.json({
     success: true,

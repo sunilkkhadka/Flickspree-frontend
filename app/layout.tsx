@@ -1,3 +1,4 @@
+import AdminNav from "@/components/AdminNav";
 import { Inter } from "next/font/google";
 
 export const metadata = {
@@ -7,14 +8,23 @@ export const metadata = {
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={inter.className}>
+        <div
+          style={{
+            display: "flex",
+          }}
+        >
+          <AdminNav />
+          <div>
+            <h1>Admin Panel</h1>
+
+            {children}
+          </div>
+        </div>
+      </body>
     </html>
   );
 }
