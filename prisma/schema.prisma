@@ -3,16 +3,15 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id Int @id @default(autoincrement())
   name String
   image String?
   email String? @unique
@@ -20,24 +19,24 @@ model User {
   hashedPassword String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  sessions Session[]
+  favouriteIds String
+  sessions Session[] 
   accounts Account[]
-  favoriteIds String[] @db.ObjectId
 }
 
 model Account {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String   @db.ObjectId
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.String
-  access_token       String?  @db.String
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.String
-  session_state      String?
+  id Int @id @default(autoincrement())
+  userId Int
+  type String
+  provider String
+  providerAccountId String
+  refresh_token String?
+  access_token String?
+  expires_at Int?
+  token_type String?
+  scope String?
+  id_token String?
+  session_state String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -45,28 +44,31 @@ model Account {
 }
 
 model Session {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id Int @id @default(autoincrement())
   sessionToken String @unique
-  userId String @db.ObjectId
+  userId Int
   expires DateTime
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
 }
 
 model VerificationToken {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id Int @id @default(autoincrement())
   identifier String
-  token      String   @unique
-  expires    DateTime
+  token String @unique
+  expires DateTime
 
-  @@unique([identifier, token])
+  @@unique([identifier,token])
 }
 
-model Movie {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+model Movie{
+  id Int @id @default(autoincrement())
   title String
   description String
   videoUrl String
   thumbnailUrl String
   genre String
+  rating Int
   duration String
 }
