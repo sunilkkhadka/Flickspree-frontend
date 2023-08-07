@@ -4,17 +4,27 @@ import { join } from "path";
 
 export async function POST(request: NextRequest) {
   const data = await request.formData();
-  const file: File | null = data.get("file") as unknown as File;
+  const imageFile: File | null = data.get("imageFile") as unknown as File;
+  const videoFile: File | null = data.get("videoFile") as unknown as File;
 
-  if (!file) {
+  if (!imageFile || !videoFile) {
     return NextResponse.json({ success: false });
   }
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+  const imageBytes = await imageFile.arrayBuffer();
+  const imageBuffer = Buffer.from(imageBytes);
 
-  const path = join("public", "files", file.name);
-  await writeFile(path, buffer);
+  const imagePath = join("public", "files", imageFile.name);
+  await writeFile(imagePath, imageBuffer);
 
-  return NextResponse.json({ success: true });
+  const videoBytes = await videoFile.arrayBuffer();
+  const videoBuffer = Buffer.from(videoBytes);
+
+  const videoPath = join("public", "files", videoFile.name);
+  await writeFile(videoPath, videoBuffer);
+
+  return NextResponse.json({
+    success: true,
+    data: { title: data.get("title"), description: data.get("description") },
+  });
 }
