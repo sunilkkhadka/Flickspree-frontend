@@ -46,10 +46,11 @@ const Auth = () => {
         email,
         password,
         redirect: false,
-        callbackUrl: "/",
+        callbackUrl: "/subscription",
       });
 
-      router.push("/profiles");
+      router.push("/subscription");
+      // router.push("/profiles");
     } catch (error) {
       console.log(error);
     }

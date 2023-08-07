@@ -2,7 +2,6 @@ import { NextPageContext } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
-import { loadStripe } from "@stripe/stripe-js";
 
 import useCurrentUser from "@/hooks/useCurrentUser";
 
@@ -54,41 +53,13 @@ const UserCard: React.FC<UserCardProps> = ({ name }) => {
   );
 };
 
-const checkout = async ({ lineItems }: { lineItems: any }) => {
-  let stripePromise: any = null;
-
-  let getStripe = () => {
-    if (!stripePromise) {
-      stripePromise = loadStripe(
-        "pk_test_51NcLvFBCzSIpyk0Zu0Wb3vrB5cHEVjkugEEQOvytDnPPKTj5GJCOu0EzlBbcFjjT5lMDrpcIprhLiZYuhLbLQq6B00uYMSHpXR" as string
-      );
-    }
-
-    return stripePromise;
-  };
-
-  const stripe = await getStripe();
-  await stripe.redirectToCheckout({
-    mode: "subscription",
-    lineItems,
-    successUrl: `${window.location.origin}?session_id={CHECKOUT_SESSION_ID}`,
-    cancelUrl: window.location.origin,
-  });
-};
-
 const App = () => {
   const router = useRouter();
   const { data: currentUser } = useCurrentUser();
 
   const selectProfile = useCallback(() => {
-    checkout({
-      lineItems: [
-        { price: "price_1NcOwmBCzSIpyk0Zkdo8oVHo" as string, quantity: 1 },
-      ],
-    });
-
-    // router.push("/");
-  }, []);
+    router.push("/");
+  }, [router]);
 
   return (
     <div className="flex items-center h-full justify-center">
